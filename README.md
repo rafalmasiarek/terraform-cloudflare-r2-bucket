@@ -4,30 +4,9 @@
 Terraform module to provision a [CloudFlare R2 bucket](https://developers.cloudflare.com/r2/).
 
 
-## License
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-```text
-The MIT License (MIT)
+## Terraform Reference
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files, to deal in the Software
-without restriction.
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
-
-Source: https://opensource.org/licenses/MIT
-```
-See [LICENSE](LICENSE) for full details.
-## Authors
-
-- Rafał Masiarek | [website](https://masiarek.pl) | [email](mailto:rafal@masiarek.pl) | [github](https://github.com/rafalmasiarek)
-
-
-<!-- BEGIN_TF_DOCS -->
 
 
 ### Requirements
@@ -83,96 +62,30 @@ No modules.
 | <a name="output_managed_domain"></a> [managed\_domain](#output\_managed\_domain) | Managed r2.dev domain configuration. |
 | <a name="output_sippy"></a> [sippy](#output\_sippy) | R2 bucket Sippy configuration. |
 
-### Examples
+## License
 
-```hcl
-module "r2_assets" {
-  source = "../.."
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-  account_id    = var.cloudflare_account_id
-  name          = "assets-prod"
-  location      = "weur"
-  storage_class = "Standard"
+```text
+The MIT License (MIT)
 
-  cors = {
-    rules = [
-      {
-        allowed = {
-          methods = ["GET", "HEAD"]
-          origins = ["https://example.com"]
-          headers = ["*"]
-        }
-        id              = "frontend"
-        expose_headers  = ["Content-Length", "Content-Encoding"]
-        max_age_seconds = 3600
-      }
-    ]
-  }
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files, to deal in the Software
+without restriction.
 
-  bucket_lifecycle = {
-    rules = [
-      {
-        id      = "archive-old-objects"
-        enabled = true
-        conditions = {
-          prefix = "archive/"
-        }
-        storage_class_transitions = [
-          {
-            condition = {
-              max_age = 86400
-              type    = "Age"
-            }
-            storage_class = "InfrequentAccess"
-          }
-        ]
-      }
-    ]
-  }
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-  lock = {
-    rules = [
-      {
-        id      = "protect-backups"
-        enabled = true
-        prefix  = "backup/"
-        condition = {
-          max_age_seconds = 604800
-          type            = "Age"
-        }
-      }
-    ]
-  }
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 
-  managed_domain = var.enable_managed_domain ? {
-    enabled = true
-  } : null
-
-  custom_domains = var.zone_id != null && var.custom_domain != null ? {
-    public = {
-      domain  = var.custom_domain
-      zone_id = var.zone_id
-      enabled = true
-      min_tls = "1.2"
-    }
-  } : {}
-
-  event_notifications = var.queue_id == null ? {} : {
-    images = {
-      queue_id = var.queue_id
-      rules = [
-        {
-          actions     = ["PutObject", "CopyObject"]
-          description = "Images upload events"
-          prefix      = "img/"
-          suffix      = ".webp"
-        }
-      ]
-    }
-  }
-}
+Source: https://opensource.org/licenses/MIT
 ```
-<!-- END_TF_DOCS -->
+
+
+See [LICENSE](LICENSE) for full details.
+## Authors
+
+- Rafał Masiarek | [website](https://masiarek.pl) | [email](mailto:rafal@masiarek.pl) | [github](https://github.com/rafalmasiarek)
 
 
 <!-- references -->
