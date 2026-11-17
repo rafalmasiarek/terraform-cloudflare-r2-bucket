@@ -1,0 +1,16 @@
+name: terraform-cloudflare-r2-bucket
+repo_url: https://github.com/rafalmasiarek/terraform-cloudflare-r2-bucket
+license: MIT
+
+context:
+  - "## About"
+  - Terraform module to provision a [CloudFlare R2 bucket](https://developers.cloudflare.com/r2/).
+
+includes:
+  - docs/terraform.md
+
+authors:
+  - name: Rafał Masiarek
+    email: rafal@masiarek.pl
+    github: rafalmasiarek
+    website: https://masiarek.pl
